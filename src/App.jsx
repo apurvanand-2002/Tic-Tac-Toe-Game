@@ -61,9 +61,12 @@ function App() {
       <button type='button' onClick={onNewGameStart} className={
         `btn-reset ${winner ? 'active' : ''}`
       }>Start new game</button>
-      <h2>Current game history:</h2>
+
+      <h2 style={{
+        fontWeight: 'normal'
+      }}>Current game history:</h2>
       <History history={history} moveTo={moveTo} currentMove={currentMove} />
-    </div>);
+    </div >);
 }
 
 export default App;
