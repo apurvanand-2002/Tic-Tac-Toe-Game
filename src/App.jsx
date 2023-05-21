@@ -1,5 +1,5 @@
 import './styles.scss'
-import Board from "./components/board"
+import Board from "./components/Board"
 
 function App() {
 
@@ -10,4 +10,4 @@ function App() {
     </div>);
 }
 
-export default App
+export default App;
