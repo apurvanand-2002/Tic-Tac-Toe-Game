@@ -3,36 +3,53 @@ import { useState } from 'react'
 import Board from "./components/Board"
 import { calculateWinner } from './winner'
 import StatusMessage from './components/StatusMessage'
+import History from './components/History'
 
 function App() {
+  const [history, setHistory] = useState([{ squares: Array(9).fill(null), isXNest: false }]);
+  const [currentMove, setCurrentMove] = useState(0);
 
-  const [squares, setSquares] = useState(Array(9).fill(null));
-  const [isXNext, setIsXNext] = useState(false);
+  const gamingBoard = history[currentMove];
 
-
-  const winner = calculateWinner(squares);
+  const winner = calculateWinner(gamingBoard.squares);
+  console.log({ history, currentMove });
 
   const handleSquareClick = (clickedPosition) => {
-    if (squares[clickedPosition] || winner) {
+    if (gamingBoard.squares[clickedPosition] || winner) {
       return;
     }
-    setSquares((currentSquares) => {
-      return currentSquares.map((squareValue, position) => {
-        if (clickedPosition === position) {
-          return isXNext ? 'X' : 'O';
-        }
+    setHistory((currentHistory) => {
+      const isTraversing = currentMove + 1 !== currentHistory.length;
+      const lastGamingState = isTraversing ? currentHistory[currentMove] : currentHistory[currentHistory.length - 1];
 
-        return squareValue;
+      const nextSquaresState = lastGamingState.squares.map(
+        (squareValue, position) => {
+          if (clickedPosition === position) {
+            // console.log('HERE IT IS________________', lastGamingState.isXNext ? 'X' : 'O');
+            return lastGamingState.isXNext ? 'X' : 'O';
+          }
+
+          return squareValue;
+        });
+      return currentHistory.concat({
+        squares: nextSquaresState, isXNext: !lastGamingState.isXNext
       });
     });
-    setIsXNext((currentIsXNext) => !currentIsXNext)
+    setCurrentMove(currentMove => currentMove + 1);
   };
+
+  const moveTo = (move) => {
+    setCurrentMove(move);
+  }
 
   return (
     <div className='app'>
+      <h1><span className="text-orange">Apurv's</span> <span className="text-green">Tic</span>-<span className="text-orange">Tac</span>-<span className="text-green">Toe</span>-<span className="text-orange">Game</span></h1>
+      <StatusMessage winner={winner} gamingBoard={gamingBoard} />
 
-      <StatusMessage winner={winner} isXNext={isXNext} squares={squares} />
-      <Board squares={squares} handleSquareClick={handleSquareClick} />
+      <Board squares={gamingBoard.squares} handleSquareClick={handleSquareClick} />
+
+      <History history={history} moveTo={moveTo} currentMove={currentMove} />
     </div>);
 }
 
