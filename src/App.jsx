@@ -31,7 +31,9 @@ function App() {
 
           return squareValue;
         });
-      return currentHistory.concat({
+      const base = isTraversing ? currentHistory.slice(0, currentHistory.indexOf(lastGamingState) + 1) : currentHistory;
+
+      return base.concat({
         squares: nextSquaresState, isXNext: !lastGamingState.isXNext
       });
     });
@@ -48,7 +50,7 @@ function App() {
       <StatusMessage winner={winner} gamingBoard={gamingBoard} />
 
       <Board squares={gamingBoard.squares} handleSquareClick={handleSquareClick} />
-
+      <h2>Current game history:</h2>
       <History history={history} moveTo={moveTo} currentMove={currentMove} />
     </div>);
 }
